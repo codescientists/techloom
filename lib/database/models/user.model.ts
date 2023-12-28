@@ -4,7 +4,7 @@ const UserSchema = new Schema({
     clerkId: { type: String, required: true, unique: true },
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+    photo: {type: String},
     address: {
         street: { type: String },
         city: { type: String },
@@ -13,6 +13,10 @@ const UserSchema = new Schema({
     },
     orders: [{ type: Schema.Types.ObjectId, ref: 'Order' }],
     wishlist: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
+    admin: {
+        type: Boolean,
+        default: false, // Default new users to non-admin
+    },    
 })
 
 const User = models.User || model('User', UserSchema);
