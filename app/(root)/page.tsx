@@ -1,10 +1,50 @@
+import BestSellingProducts from "@/components/root/shared/BestSellingProducts";
+import Collection from "@/components/root/shared/Collection";
+import HomeHero from "@/components/root/shared/HomeHero";
+import { getAllProducts } from "@/lib/actions/product.action";
+import { SearchParamProps } from "@/types";
 
 
-export default function Home() {
+export default async function Home({searchParams}: SearchParamProps) {
+
+  const page = Number(searchParams?.page) || 1;
+  const searchText = (searchParams?.query as string) || '';
+  const category = (searchParams?.category as string) || '';
+
+
+  const products = await getAllProducts({
+    query: searchText,
+    category,
+    page,
+    limit: 8
+  })
+
   return (
-    <main className="flex flex-col h-screen border items-center p-24">
-      <h1 className="text-3xl font-bold">Welcome to TECHLOOM</h1>
-      <p >We are launcing soon!</p>
+    <main className="container">
+      <HomeHero/>
+
+      <div className="my-10 w-full">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-3xl font-bold">Best Selling Products</h2>
+        </div>
+        <BestSellingProducts
+          data={products?.data}
+        />
+      </div>
+
+      <div className="my-20">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-3xl font-bold">Explore Our Products</h2>
+        </div>
+        <Collection
+          data={products?.data}
+          emptyTitle="No Products Found"
+          emptyStateSubtext="Come back later"
+          limit={8}
+          page={page}
+          totalPages={products?.totalPages}
+        />
+      </div>
     </main>
   )
 }

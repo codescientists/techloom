@@ -1,5 +1,23 @@
 import { Schema, model, models } from "mongoose";
 
+export interface IProduct extends Omit<Document, 'images'> {
+    _id: string;
+    name: string;
+    description: string;
+    price: number;
+    stock: number;
+    images: string[];
+    category: {
+        _id: string;
+        name: string;
+    };
+    reviews: Array<{
+        _id: string;
+        rating: number;
+        text: string;
+    }>;
+}
+
 const ProductSchema = new Schema({
     name: { type: String, required: true },
     description: { type: String },

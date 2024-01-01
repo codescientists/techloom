@@ -14,7 +14,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="bg-gray-900 h-screen w-1/5 px-8 pt-8 hidden md:block ">
+    <div className="bg-gray-900 h-full w-full px-8 pt-8">
       <h1 className="text-2xl font-bold mb-4 text-white flex items-center"><StoreIcon className="mr-2" />TechLoom Admin</h1>
       <Separator className='my-4' />
       <ul className="space-y-2">

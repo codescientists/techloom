@@ -6,8 +6,7 @@ const ReviewSchema = new Schema({
     rating: { type: Number, required: true },
     text: { type: String },
 });
-  
-  
+ 
 
 const Review = models.Review || model('Review', ReviewSchema);
 
