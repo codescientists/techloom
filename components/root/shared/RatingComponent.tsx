@@ -12,8 +12,7 @@ const RatingComponent = ({product}:{product: IProduct}) => {
             allowFraction={true}
             size={20}
         />
-        <span className="text-gray-500 text-md ml-1">(0)</span>
-        {/*  {(product.reviews)} */}
+        <span className="text-gray-500 text-md ml-1">({product.reviews.length})</span>
     </div>
   )
 }

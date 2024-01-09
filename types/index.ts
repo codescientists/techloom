@@ -1,3 +1,6 @@
+import { IProduct } from "@/lib/database/models/product.model";
+import stripe from "stripe";
+
 // ====== USER PARAMS
 export type CreateUserParams = {
     clerkId: string;
@@ -77,4 +80,33 @@ export type UrlQueryParams = {
 export type SearchParamProps = {
   params: { id: string }
   searchParams: { [key: string]: string | string[] | undefined }
+}
+
+// REVIEW PARAMS
+export type createReviewParams = {
+  userId:string;
+  productId: string;
+  rating: number;
+  comment: string;
+  path: string;
+}
+
+
+// ORDER PARAMS
+export type CheckoutOrderParams = {
+  cart: [
+    {
+      product: IProduct;
+      quantity: number
+    }
+  ]
+  buyerId: string
+}
+
+export type createOrderParams = {
+  buyerId: string
+  products: stripe.ApiList<stripe.LineItem> | undefined,
+  totalAmount: number,
+  shippingAddress: stripe.Checkout.Session.ShippingDetails | null,
+  createdAt: Date;
 }

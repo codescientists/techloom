@@ -11,9 +11,10 @@ const OrderSchema = new Schema({
       street: { type: String },
       city: { type: String },
       state: { type: String },
-      zipcode: { type: String },
+      pincode: { type: String },
     },
     status: { type: String, enum: ['placed', 'shipped', 'delivered', 'cancelled'] },
+    createdAt: {type: Date},
 });
   
   

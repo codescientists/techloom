@@ -6,14 +6,22 @@ import { connectToDatabase } from "../database";
 import Product from "../database/models/product.model";
 import { revalidatePath } from "next/cache";
 import Category from "../database/models/category.model";
+import Review from "../database/models/review.model";
+import User from "../database/models/user.model";
 
 const getCategoryByName = async (name: string) => {
   return Category.findOne({ name: { $regex: name, $options: 'i' } })
 }
 
-const populateEvent = (query: any) => {
+const populateCategory = (query: any) => {
   return query
-    .populate({ path: 'category', model: Category, select: '_id name' })
+  .populate({ path: 'category', model: Category, select: '_id name' })
+  .populate({
+    path: 'reviews',
+    model: Review,
+    select: '_id rating text',
+    populate: { path: 'user', model: User, select: '_id name photo' }
+  });
 }
 
 
@@ -89,7 +97,7 @@ export async function getAllProducts({ query, limit = 6, page, category }: getAl
       .skip(skipAmount)
       .limit(limit)
 
-    const products = await populateEvent(productsQuery)
+    const products = await populateCategory(productsQuery)
     const productsCount = await Product.countDocuments(conditions)
 
     return {
@@ -107,7 +115,8 @@ export async function getProductById(productId: string) {
   try {
     await connectToDatabase()
 
-    const product = await populateEvent(Product.findById(productId))
+    const product = await populateCategory(Product.findById(productId))
+    console.log(product)
 
     if (!product) throw new Error('Product not found')
 

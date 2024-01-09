@@ -10,9 +10,6 @@ type updateProductParams = {
 }
 
 const UpdateProduct = async ({params: {id}}: updateProductParams) => {
-  const { sessionClaims } = auth();
-
-  const userId = sessionClaims?.userId as string;
   const product = await getProductById(id)
   
   return (

@@ -15,7 +15,7 @@ export default async function RootLayout({
 
   const userInfo = await getUser(user?.id);
   
-  if (!userInfo[0].admin) redirect("/");
+  if (!userInfo.admin) redirect("/");
 
   return (
       <html lang="en">

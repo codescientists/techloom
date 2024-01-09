@@ -1,4 +1,19 @@
 import { Schema, model, models } from "mongoose";
+import { IProduct } from "./product.model";
+
+export interface IReview extends Document {
+    _id: string;
+    user: {
+        _id: string;
+        clerkId: string;
+        name: string;
+        email: string;
+        photo: string;
+    };
+    product: IProduct;
+    rating: number;
+    text: string;
+}
 
 const ReviewSchema = new Schema({
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },

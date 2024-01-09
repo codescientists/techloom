@@ -32,12 +32,12 @@ import { Input } from "@/components/ui/input"
 
     // Generating slug 
     function slugify(str: string) {
-        return str.toLowerCase()
-          .replace(/[^a-z0-9-]+/g, '-') // Remove non-alphanumeric characters
-          .replace(/-+/g, '-')         // Replace multiple hyphens with single
-          .trim();                  // Trim leading/trailing hyphens
-        }
-      
+      return str.toLowerCase()
+        .replace(/[^a-z0-9-]+/g, '-') // Remove non-alphanumeric characters
+        .replace(/-+/g, '-')         // Replace multiple hyphens with single
+        .trim();                  // Trim leading/trailing hyphens
+    }
+    
   
     const handleAddCategory = () => {
       createCategory({

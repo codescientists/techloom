@@ -1,7 +1,7 @@
-
 import React from 'react'
 import Card from './Card'
 import { IProduct } from '@/lib/database/models/product.model'
+import { auth } from '@clerk/nextjs'
 // import Pagination from './Pagination'
 
 type CollectionProps = {
@@ -22,6 +22,10 @@ const Collection = ({
   totalPages = 0,
   urlParamName,
 }: CollectionProps) => {
+  const { sessionClaims } = auth();
+
+  const userId = sessionClaims?.userId as string;
+  
   return (
     <>
       {data.length > 0 ? (
@@ -30,7 +34,7 @@ const Collection = ({
             {data.map((product) => {
               return (
                 <li key={product._id} className="flex justify-center">
-                  <Card product={product} />
+                  <Card product={product} userId={userId}/>
                 </li>
               )
             })}

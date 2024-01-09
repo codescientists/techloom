@@ -3,6 +3,7 @@ import Collection from "@/components/root/shared/Collection";
 import HomeHero from "@/components/root/shared/HomeHero";
 import { getAllProducts } from "@/lib/actions/product.action";
 import { SearchParamProps } from "@/types";
+import { auth } from "@clerk/nextjs";
 
 
 export default async function Home({searchParams}: SearchParamProps) {
@@ -11,6 +12,9 @@ export default async function Home({searchParams}: SearchParamProps) {
   const searchText = (searchParams?.query as string) || '';
   const category = (searchParams?.category as string) || '';
 
+  const { sessionClaims } = auth();
+
+  const userId = sessionClaims?.userId as string;
 
   const products = await getAllProducts({
     query: searchText,
@@ -29,6 +33,7 @@ export default async function Home({searchParams}: SearchParamProps) {
         </div>
         <BestSellingProducts
           data={products?.data}
+          userId={userId}
         />
       </div>
 

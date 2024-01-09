@@ -1,17 +1,24 @@
 
 import RatingComponent from '@/components/root/shared/RatingComponent';
+import Reviews from '@/components/root/shared/Reviews';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { getProductById } from '@/lib/actions/product.action'
 import { SearchParamProps } from '@/types'
+import { auth } from '@clerk/nextjs';
 import { RefreshCcw, ShoppingCartIcon, TruckIcon } from 'lucide-react';
 import Link from 'next/link';
 
 const ProductDetails = async ({ params: { id }, searchParams }: SearchParamProps) => {
-    const product = await getProductById(id);
+  const { sessionClaims } = auth();
+
+  const userId = sessionClaims?.userId as string;
+
+  const product = await getProductById(id);
 
   return (
-    <div className="container flex my-10 min-h-[500px]">
+    <div className="w-full">
+      <div className="container flex my-10 min-h-[500px]">
         <div className="w-full md:w-1/2 ">
             <img src={product.images[0]} alt="" className="h-full w-full object-cover border" />
         </div>
@@ -56,6 +63,9 @@ const ProductDetails = async ({ params: { id }, searchParams }: SearchParamProps
               </div>
             </div>
         </div>
+    </div>
+    
+    <Reviews productId={id} userId={userId} reviews={product.reviews}/>
     </div>
   )
 }

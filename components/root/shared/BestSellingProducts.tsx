@@ -1,6 +1,5 @@
 "use client"
 
-import * as React from "react"
 
 import {
   Carousel,
@@ -11,11 +10,17 @@ import {
 } from "@/components/ui/carousel"
 import Card from "./Card"
 import { IProduct } from "@/lib/database/models/product.model"
+import { useEffect, useState } from "react"
+import { getAllProducts } from "@/lib/actions/product.action"
 
 type BestSellingProductsParams = {
-    data: IProduct[]
+    data: IProduct[],
+    userId: string,
 }
-const BestSellingProducts = ({data}: BestSellingProductsParams) => {
+
+const BestSellingProducts = ({data, userId}: BestSellingProductsParams) => {
+
+
   return (
     <Carousel
       opts={{
@@ -27,7 +32,7 @@ const BestSellingProducts = ({data}: BestSellingProductsParams) => {
         {data.map((product) => (
           <CarouselItem key={product._id} className="md:basis-1/2 lg:basis-1/5">
             <div className="p-1">
-              <Card product={product} />
+              <Card product={product} userId={userId} />
             </div>
           </CarouselItem>
         ))}
