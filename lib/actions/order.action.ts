@@ -1,11 +1,9 @@
-import { metadata } from './../../app/layout';
 "use server"
 
 import { CheckoutOrderParams, createOrderParams } from '@/types';
 import { redirect } from 'next/navigation';
 import Stripe from 'stripe';
 import User from '../database/models/user.model';
-import Product from '../database/models/product.model';
 import Order from '../database/models/order.model';
 import { connectToDatabase } from '../database';
 
@@ -23,37 +21,37 @@ export const checkoutOrder = async ({buyerId, cart}: CheckoutOrderParams) => {
         },
         quantity: cartItem.quantity
     })); 
-
-    await connectToDatabase();
-
-    const user = await User.findById(buyerId);
-  
-    if (!user) {
-      throw new Error('User not found');
-    }
     
-    // Create a new order  
-    const order = new Order({
-      user: buyerId,
-      products: cart,
-      status: 'unpaid',
-      isPaid: false,
-      createdAt: new Date(),
-    });
-
-    // Save the order to the database
-    await order.save();
-
-    // Update the user's orders array with the new order
-    user.orders.push(order._id);
-    await user.save();
-
     try {
+      await connectToDatabase();
+
+      const user = await User.findById(buyerId);
+    
+      if (!user) {
+        throw new Error('User not found');
+      }
+      
+      // Create a new order  
+      const order = new Order({
+        user: buyerId,
+        products: cart,
+        status: 'unpaid',
+        isPaid: false,
+        createdAt: new Date(),
+      });
+
+      // Save the order to the database
+      await order.save();
+
+      // Update the user's orders array with the new order
+      user.orders.push(order._id);
+      await user.save();
+
       const session = await stripe.checkout.sessions.create({
         line_items: lineItems,
         metadata: {
           buyerId: buyerId,
-          orderId: order._id,
+          orderId: (order._id).toString(),
         },
         mode: 'payment',
         shipping_address_collection: { "allowed_countries" : ["IN", "US"]},
@@ -69,7 +67,7 @@ export const checkoutOrder = async ({buyerId, cart}: CheckoutOrderParams) => {
   }
 
   
-export const createOrder = async ({orderId, shippingAddress}: createOrderParams) => {
+export const updateOrder = async ({orderId, shippingAddress}: createOrderParams) => {
     try {
       await connectToDatabase();
 
