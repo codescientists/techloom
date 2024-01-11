@@ -21,17 +21,12 @@ export async function POST(request: Request) {
 
   // CREATE
   if (eventType === 'checkout.session.completed') {
-    const { amount_total, metadata, line_items, shipping_details } = event.data.object;
+    const { metadata, shipping_details,  } = event.data.object;
     
     const order = {
-      buyerId: metadata?.buyerId || '',
-      products: line_items,
-      totalAmount: amount_total || 0,
-      shippingAddress: shipping_details || null,
-      createdAt: new Date(),
+      orderId: metadata?.orderId || '',
+      shippingAddress: shipping_details,
     }
-
-    console.log(order)
 
     const newOrder = await createOrder(order)
 

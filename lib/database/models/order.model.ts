@@ -6,14 +6,14 @@ const OrderSchema = new Schema({
       product: { type: Schema.Types.ObjectId, ref: 'Product' },
       quantity: { type: Number, required: true },
     }],
-    totalPrice: { type: Number, required: true },
     shippingAddress: {
       street: { type: String },
       city: { type: String },
       state: { type: String },
       pincode: { type: String },
     },
-    status: { type: String, enum: ['placed', 'shipped', 'delivered', 'cancelled'] },
+    status: { type: String, enum: ['unpaid', 'placed', 'shipped', 'delivered', 'cancelled'] },
+    isPaid: { type: Boolean, required: true, default: false },
     createdAt: {type: Date},
 });
   

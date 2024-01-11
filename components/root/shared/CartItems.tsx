@@ -52,15 +52,17 @@ const CartItems = ({cartItems, userId}: any) => {
                         </p>
                         <div className="flex items-center mt-2">
                         <button
+                            disabled={cartItem.quantity <= 1}
                             onClick={ ()=> handleQuantity(cartItem.product._id, -1)}
-                            className="border h-8 w-8 rounded flex items-center justify-center text-gray-500 focus:outline-none"
+                            className="border h-8 w-8 rounded flex items-center justify-center text-gray-500 focus:outline-none disabled:bg-gray-100"
                         >
                             <MinusIcon className="w-4 h-4"/>
                         </button>
                         <span className="mx-2">{cartItem.quantity}</span>
                         <button
+                            disabled={cartItem.quantity >= cartItem.product.stock}
                             onClick={ ()=> handleQuantity(cartItem.product._id, +1)}
-                            className="border h-8 w-8 rounded flex items-center justify-center text-gray-500 focus:outline-none"
+                            className="border h-8 w-8 rounded flex items-center justify-center text-gray-500 focus:outline-none disabled:bg-gray-100"
                         >
                             <PlusIcon className="w-4 h-4"/>
                         </button>

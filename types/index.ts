@@ -104,9 +104,6 @@ export type CheckoutOrderParams = {
 }
 
 export type createOrderParams = {
-  buyerId: string
-  products: stripe.ApiList<stripe.LineItem> | undefined,
-  totalAmount: number,
-  shippingAddress: stripe.Checkout.Session.ShippingDetails | null,
-  createdAt: Date;
+  orderId: string;
+  shippingAddress: stripe.Checkout.Session.ShippingDetails | null;
 }

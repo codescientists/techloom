@@ -9,32 +9,54 @@ import Product from '../database/models/product.model';
 import Order from '../database/models/order.model';
 import { connectToDatabase } from '../database';
 
-export const checkoutOrder = async (order: CheckoutOrderParams) => {
+export const checkoutOrder = async ({buyerId, cart}: CheckoutOrderParams) => {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!); 
 
-    const lineItems = order.cart.map(cartItem => ({
+    const lineItems = cart.map(cartItem => ({
         price_data: {
           currency: 'inr',
           unit_amount: cartItem.product.price * 100,
           product_data: {
             name: cartItem.product.name,
             images: cartItem.product.images,
-            metadata: {
-              productId: cartItem.product._id,
-            }
           }
         },
         quantity: cartItem.quantity
-    }));    
+    })); 
+
+    await connectToDatabase();
+
+    const user = await User.findById(buyerId);
+  
+    if (!user) {
+      throw new Error('User not found');
+    }
+    
+    // Create a new order  
+    const order = new Order({
+      user: buyerId,
+      products: cart,
+      status: 'unpaid',
+      isPaid: false,
+      createdAt: new Date(),
+    });
+
+    // Save the order to the database
+    await order.save();
+
+    // Update the user's orders array with the new order
+    user.orders.push(order._id);
+    await user.save();
 
     try {
       const session = await stripe.checkout.sessions.create({
         line_items: lineItems,
         metadata: {
-          buyerId: order.buyerId,
+          buyerId: buyerId,
+          orderId: order._id,
         },
         mode: 'payment',
-        billing_address_collection: 'required',
+        shipping_address_collection: { "allowed_countries" : ["IN", "US"]},
         success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/profile`,
         cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/`,
       });
@@ -47,54 +69,22 @@ export const checkoutOrder = async (order: CheckoutOrderParams) => {
   }
 
   
-export const createOrder = async (order: createOrderParams) => {
+export const createOrder = async ({orderId, shippingAddress}: createOrderParams) => {
     try {
       await connectToDatabase();
 
-      const user = await User.findById(order.buyerId);
-    
-      if (!user) {
-        throw new Error('User not found');
-      }
-
-      // Validate product existence and calculate total price
-      // const orderedProducts = await Promise.all(order?.products?.data?.map(async ({ price, quantity }) => {
-      //   // Assuming you have a Product model
-      //   const product = await Product.findById(price_data.product_data.metadata.productId);
-
-      //   if (!product) {
-      //     throw new Error(`Product with ID ${price_data.product_data.metadata.productId} not found`);
-      //   }
-
-      //   // For simplicity, we'll assume the product exists
-      //   return {
-      //     products: product._id,
-      //     quantity,
-      //   };
-      // }));
-
-      // Create a new order  
-      const newOrder = new Order({
-        user: order.buyerId,
-        // products: orderedProducts,
-        totalPrice: order.totalAmount,
+      // Updating the order with shipping address
+      const updatedOrder = await Order.updateOne({_id: orderId}, {
         shippingAddress: {
-          street: order?.shippingAddress?.address?.line1,
-          city: order?.shippingAddress?.address?.city,
-          state: order?.shippingAddress?.address?.state,
-          pincode: order?.shippingAddress?.address?.postal_code,
+          street: shippingAddress?.address?.line1,
+          city: shippingAddress?.address?.city,
+          state: shippingAddress?.address?.state,
+          pincode: shippingAddress?.address?.postal_code,
         },
-        status: 'placed',
-        createdAt: order.createdAt,
+        status: 'placed'
       });
-
-      // Save the order to the database
-      await newOrder.save();
-
-      // Update the user's orders array with the new order
-      user.orders.push(newOrder._id);
-      await user.save();
-
+      
+      return JSON.parse(JSON.stringify(updatedOrder))
         
     } catch (error) {
       throw error;
