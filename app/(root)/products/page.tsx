@@ -1,4 +1,5 @@
 import Collection from '@/components/root/shared/Collection';
+import Search from '@/components/root/shared/Search';
 import { getAllProducts } from '@/lib/actions/product.action';
 import { SearchParamProps } from '@/types';
 import React from 'react'
@@ -18,18 +19,19 @@ const Products = async ({searchParams}: SearchParamProps) => {
 
   return (
     <div className="container">
-        <div className="my-20">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-3xl font-bold">Our Products</h2>
-        </div>
-        <Collection
-          data={products?.data}
-          emptyTitle="No Products Found"
-          emptyStateSubtext="Come back later"
-          limit={8}
-          page={page}
-          totalPages={products?.totalPages}
-        />
+      <div className="my-20">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-3xl font-bold">Our Products</h2>
+            <Search />
+          </div>
+          <Collection
+            data={products?.data}
+            emptyTitle="No Products Found"
+            emptyStateSubtext="Come back later"
+            limit={8}
+            page={page}
+            totalPages={products?.totalPages}
+          />
       </div>
     </div>
   )

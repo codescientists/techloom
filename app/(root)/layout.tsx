@@ -1,3 +1,4 @@
+import Footer from "@/components/root/shared/Footer"
 import Navbar from "@/components/root/shared/Navbar"
 import { Separator } from "@/components/ui/separator"
 
@@ -13,6 +14,7 @@ export default function RootLayout({
           <Navbar />
           <Separator/>
           {children}
+          <Footer/>
         </body>
       </html>
   )

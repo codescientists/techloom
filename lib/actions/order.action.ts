@@ -79,7 +79,8 @@ export const updateOrder = async ({orderId, shippingAddress}: createOrderParams)
           state: shippingAddress?.address?.state,
           pincode: shippingAddress?.address?.postal_code,
         },
-        status: 'placed'
+        status: 'placed',
+        isPaid: true,
       });
       
       return JSON.parse(JSON.stringify(updatedOrder))

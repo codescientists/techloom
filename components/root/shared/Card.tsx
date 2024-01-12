@@ -22,8 +22,6 @@ const Card = ({ product, userId }: CardProps) => {
   const pathname = usePathname();
 
   const handleCart = async () => {
-    console.log(userId, productId)
-
     const addedtoCart = await addItemToCart({
       userId: userId,
       productId: productId,
@@ -32,7 +30,7 @@ const Card = ({ product, userId }: CardProps) => {
 
     if(addedtoCart) {
       toast({
-        title: "Success: Product Added to cart!",
+        title: "Product Added to cart!",
       })
     }
   }
@@ -67,14 +65,14 @@ const Card = ({ product, userId }: CardProps) => {
           <p className="text-md font-semibold line-clamp-2 flex-1 text-black">{product.name}</p>
         </Link>
 
-        <p className="flex items-center justify-between">
+        <div className="flex items-center justify-between">
           <span className="text-sm font-bold text-red-600 mr-2">
             {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(product.price)}
           </span>
         
           <RatingComponent product={product}/>
 
-        </p>
+        </div>
 
       </div>
     </div>

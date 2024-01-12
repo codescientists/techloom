@@ -2,7 +2,6 @@ import React from 'react'
 import Card from './Card'
 import { IProduct } from '@/lib/database/models/product.model'
 import { auth } from '@clerk/nextjs'
-// import Pagination from './Pagination'
 
 type CollectionProps = {
   data: IProduct[],

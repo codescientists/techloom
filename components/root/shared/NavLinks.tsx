@@ -29,13 +29,6 @@ const NavLinks = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/contact">
-                  <div className={`flex items-center ${isActive('/contact')} hover:border-b-2 border-slate-700`}>
-                    Contact
-                  </div>
-                </Link>
-              </li>
-              <li>
                 <Link href="/profile">
                   <div className={`flex items-center ${isActive('/profile')} hover:border-b-2 border-slate-700`}>
                     Profile

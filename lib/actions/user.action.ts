@@ -76,6 +76,25 @@ export async function getUser(userId:string | undefined) {
       }
 }
 
+export async function getUserOrders(userId:string | undefined) {
+      try {
+        await connectToDatabase()
+    
+        const user = await User.findById(userId).populate({
+          path: 'orders',
+          options: { sort: { createdAt: "desc" } },
+          populate: {
+            path: 'products.product',
+            model: 'Product' 
+          }
+        });        
+        
+        return JSON.parse(JSON.stringify(user))
+      } catch (error) {
+        handleError(error)
+      }
+}
+
 export async function getAllAdmins() {
       try {
         await connectToDatabase()

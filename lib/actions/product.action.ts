@@ -116,7 +116,6 @@ export async function getProductById(productId: string) {
     await connectToDatabase()
 
     const product = await populateCategory(Product.findById(productId))
-    console.log(product)
 
     if (!product) throw new Error('Product not found')
 
