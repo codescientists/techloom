@@ -1,4 +1,5 @@
 
+import OrderTable from "@/components/admin/shared/OrderTable";
 import {
   Table,
   TableBody,
@@ -9,6 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { getAllOrders } from "@/lib/actions/order.action";
 import { EyeIcon } from "lucide-react";
 
 const orders = [
@@ -65,43 +67,31 @@ const orders = [
 ];
 
 
-const Orders = () => {
+const Orders = async () => {
+
+  const orders = await getAllOrders();
+
+  const data = orders.map((order: any) => {
+    const { user, status, createdAt, _id } = order;
+  
+    const newObj = {
+      name: user.name,
+      email: user.email,
+      status: status,
+      date: createdAt,
+      _id: _id
+    };
+  
+    return newObj;
+  });
+
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-bold">Orders</h2>
       </div>
 
-
-
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>#ID</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Date</TableHead>
-            <TableHead>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {orders.map((order:any) => (
-            <TableRow key={order._id}>
-              <TableCell className="font-medium">{order._id}</TableCell>
-              <TableCell className="font-medium">{order.name}</TableCell>
-              <TableCell>{order.email}</TableCell>
-              <TableCell>{order.status}</TableCell>
-              <TableCell>{order.date}</TableCell>
-              <TableCell>
-                  <button className="text-xs flex items-center border px-2 py-1 rounded-sm">
-                    <EyeIcon className="h-2 w-2 mr-1"/> View Details
-                  </button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <OrderTable data={data}/>
     </div>
   )
 }

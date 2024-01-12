@@ -6,6 +6,7 @@ import Stripe from 'stripe';
 import User from '../database/models/user.model';
 import Order from '../database/models/order.model';
 import { connectToDatabase } from '../database';
+import Product from '../database/models/product.model';
 
 export const checkoutOrder = async ({buyerId, cart}: CheckoutOrderParams) => {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!); 
@@ -84,6 +85,28 @@ export const updateOrder = async ({orderId, shippingAddress}: createOrderParams)
       });
       
       return JSON.parse(JSON.stringify(updatedOrder))
+        
+    } catch (error) {
+      throw error;
+    }
+}
+
+
+export const getAllOrders = async () => {
+    try {
+      await connectToDatabase();
+
+      const orders = await Order.find().populate({
+        path: 'products',
+        populate: {
+          path: 'product',
+          model: Product
+        }
+      })
+      .populate("user")
+      .sort({ createdAt: "desc" }); 
+
+      return JSON.parse(JSON.stringify(orders))
         
     } catch (error) {
       throw error;
